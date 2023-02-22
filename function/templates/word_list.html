@@ -1,0 +1,10 @@
+{% extends "home.html" %}
+{% block content %}
+    {% if word %}
+        <p class="amount">Количество использований слова "{{ word }}": {{ amount }}</p>
+    {% endif %}
+    {% for woe in woes %}
+        {{ woe|safe }}
+        <hr>
+    {% endfor %}
+{% endblock content %}
