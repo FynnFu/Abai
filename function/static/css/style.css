@@ -105,3 +105,13 @@ body{
   width: calc(100% - 10px);
   height: calc(100% + 10px);
 }
+@media screen and (max-width: 600px) {
+  p{
+    font-size: 24px;
+    padding: 0 10% 0 10%;
+  }
+    .content{
+    background-color: white;
+    margin: 0 5% 0 5%;
+    }
+}
