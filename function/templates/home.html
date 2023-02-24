@@ -8,15 +8,24 @@
 </head>
 <body>
     <div class="head">
-        <a href="{% url 'woe' %}" class="animated-button">Слова Назидания</a>
-        <a href="https://tw0ur.github.io" class="animated-button">Главная</a>
-        <a href="{% url 'ch' %}" class="animated-button">Кодекс человечности</a>
-        <div><h1>Поиск слова</h1></div>
+        <a href="{% url 'woe' ln %}" class="animated-button">{{ interface_words.words_of_edification }}</a>
+        <a href="https://tw0ur.github.io" class="animated-button">{{ interface_words.home }}</a>
+        <a href="{% url 'ch' ln %}" class="animated-button">{{ interface_words.code_of_humanity }}</a>
+        <div class="dropdown">
+            <button class="btn" style="border-left:1px solid #0d8bf2">
+                <i class="fa fa-caret-down">{{ ln.upper }}</i>
+            </button>
+            <div class="dropdown-content">
+                <a href="{% url 'home' 'ru' %}">RU</a>
+                <a href="{% url 'home' 'kz' %}">KZ</a>
+            </div>
+        </div>
+        <div><h1>{{ interface_words.word_search }}</h1></div>
         <h1>{% block header %}{% endblock header %}</h1>
         <form method="post" action="../home/">
             {% csrf_token %}
-            <input name="word_str" placeholder="Слово..."/><br>
-            <input type="submit" value="Найти" class="double-border-button">
+            <input name="word_str" placeholder="{{ interface_words.word }}"/><br>
+            <input type="submit" value="{{ interface_words.find }}" class="double-border-button">
         </form>
     </div>
     <div class="content">

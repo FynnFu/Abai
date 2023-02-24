@@ -16,7 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+import function.views
+
 urlpatterns = [
+    path('', function.views.index),
     path('admin/', admin.site.urls),
-    path('', include('function.urls'))
+    path('abai/<str:ln>/', include('function.urls'))
 ]

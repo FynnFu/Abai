@@ -1,51 +1,105 @@
+import pymorphy2 as pymorphy2
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from function.models import *
 
+interface_words = {"find": 'Найти',
+                   "word_search": 'Поиск слова',
+                   "home": 'Главная',
+                   "word": 'Слово...',
+                   "words_of_edification": 'Слова назидания',
+                   "code_of_humanity": 'Кодекс человечности',
+                   "number_of_uses_of_the_word": 'Количество использований слова: '}
+interface_words_kz = {"find": 'Іздеу',
+                      "word_search": 'Сөзді іздеу',
+                      "home": 'Басты бет',
+                      "word": 'Сөз...',
+                      "words_of_edification": 'Қара сөз',
+                      "code_of_humanity": 'Адамгеншілік кодекс',
+                      "number_of_uses_of_the_word": 'Қолданған сөздер саны: '}
 
-def index(request):
-    return redirect('home')
+
+def index(request, ln='ru'):
+    return redirect(home, ln)
 
 
-def home(request):
+def home(request, ln):
     woe_text = []
-    i = 0
+    title_list = []
     word_str = request.POST.get('word_str', None)
-    if word_str is None:
-        return get_all_woe(request)
+    if word_str is None or word_str == '':
+        return get_all_woe(request, ln)
     elif word_str == "снупдог":
         return render(request, 'abai.html')
     else:
         woes = WOE.objects.all()
+        word_list = morphy(word_str)
         for woe in woes:
-            if woe.text.find(' ' + word_str) > -1:
-                lens = woe.text.replace(word_str, '<strong>' + word_str + '</strong>')
-                woe_text.append('<h2>' + woe.title + '</h2>' + '<br>' + '<p>' + lens + '</p>' + '<br>')
-                i += 1
-        data = {"woes": woe_text, "amount": i, "word": word_str}
+            if ln == 'ru':
+                lens = woe.text
+                title = woe.title
+            else:
+                lens = woe.text_kz
+                title = woe.title_kz
+            for word_one in word_list:
+                endings = [' ', '.', '!', ',', '?']
+                words = [word_one, word_one.title()]
+                for word in words:
+                    for ending in endings:
+                        if lens.find(' ' + word + ending) > -1:
+                            lens = lens.replace(' ' + word + ending, '<strong>' + ' ' + word + ending + '</strong>')
+                            if not (title in title_list):
+                                title_list.append(title)
+            if title in title_list:
+                woe_text.append('<h2>' + title + '</h2>' + '<br>' + '<p>' + lens + '</p>' + '<br>')
+        i = 0
+        for woe in woe_text:
+            i += woe.count('</strong>')
+        data = {"woes": woe_text, "amount": i, "word": word_str, "ln": ln, "interface_words": get_interface_words(ln)}
         return render(request, 'word_list.html', data)
 
 
-def get_all_woe(request):
+def get_all_woe(request, ln):
     woes = WOE.objects.all()
     woe_text = []
-    word_str = ''
     for woe in woes:
-        if woe.text.find(' ' + word_str) > -1:
-            lens = woe.text.replace(word_str, '<strong>' + word_str + '</strong>')
-            woe_text.append('<h2>' + woe.title + '</h2>' + '<br>' + '<p>' + lens + '</p>' + '<br>')
-    data = {"woes": woe_text}
+        if ln == 'ru':
+            lens = woe.text
+            title = woe.title
+        else:
+            lens = woe.text_kz
+            title = woe.title_kz
+        woe_text.append('<h2>' + title + '</h2>' + '<br>' + '<p>' + lens + '</p>' + '<br>')
+    data = {"woes": woe_text, "ln": ln, "interface_words": get_interface_words(ln)}
     return render(request, 'word_list.html', data)
 
 
-def get_all_ch(request):
+def get_all_ch(request, ln):
     chs = CH.objects.all()
     ch_text = []
-    word_str = ''
     for ch in chs:
-        if ch.text.find(' ' + word_str) > -1:
-            lens = ch.text.replace(word_str, '<strong>' + word_str + '</strong>')
-            ch_text.append('<h2>' + str(ch.id) + '</h2>' + '<br>' + '<p>' + lens + '</p>' + '<br>')
-    print(ch_text)
-    data = {"woes": ch_text}
+        if ln == 'ru':
+            lens = ch.text
+        else:
+            lens = ch.text_kz
+        ch_text.append('<h2>' + str(ch.id) + '</h2>' + '<br>' + '<p>' + lens + '</p>' + '<br>')
+    data = {"woes": ch_text, "ln": ln, "interface_words": get_interface_words(ln)}
     return render(request, 'word_list.html', data)
+
+
+def morphy(word):
+    all_lexeme = []
+    morph = pymorphy2.MorphAnalyzer()
+    p = morph.parse(word)[0]
+    for x in p.lexeme:
+        all_lexeme.append(x.word)
+    return all_lexeme
+
+
+def get_interface_words(languages):
+    if languages == 'ru':
+        return interface_words
+    elif languages == 'kz':
+        return interface_words_kz
+    else:
+        return interface_words
