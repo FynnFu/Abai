@@ -24,8 +24,9 @@ def index(request, ln='ru'):
     if ln is not None:
         return redirect(home, ln)
     else:
+        ln = 'ru'
         html = redirect(home, ln)
-        html.set_cookie('ln', 'ru')
+        html.set_cookie('ln', ln)
         return html
 
 
