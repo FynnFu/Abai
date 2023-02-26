@@ -10,3 +10,4 @@ urlpatterns = [
     path('woe/', get_all_woe, name='woe'),
     path('ch/', get_all_ch, name='ch')
 ]
+

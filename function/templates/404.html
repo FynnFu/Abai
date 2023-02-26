@@ -1,0 +1,19 @@
+{% extends "home.html" %}
+{% load static %}
+{% block header %}
+    <style>
+    a{
+        text-decoration: none;
+    }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="abai">
+        <p style="text-align: center" >Тут пока ничего нет, но возможно в будущем будет)</p>
+        <p style="text-align: center" >А пока можете поддержать проект донатом</p>
+        <p style="text-align: center" >Вот ссылочка:
+            <a href="https://www.donationalerts.com/r/arima2">https://www.donationalerts.com/r/arima2</a>
+        </p>
+        <p style="text-align: center" ><img src="{% static 'image/arima.jpeg' %}" alt="arima"></p>
+    </div>
+{% endblock content %}

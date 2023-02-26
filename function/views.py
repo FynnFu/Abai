@@ -15,12 +15,18 @@ interface_words_kz = {"find": 'Іздеу',
                       "home": 'Басты бет',
                       "word": 'Сөз...',
                       "words_of_edification": 'Қара сөз',
-                      "code_of_humanity": 'Адамгеншілік кодекс',
+                      "code_of_humanity": 'Адамгершілік кодекс',
                       "number_of_uses_of_the_word": 'Қолданған сөздер саны: '}
 
 
 def index(request, ln='ru'):
-    return redirect(home, ln)
+    ln = request.COOKIES.get('ln')
+    if ln is not None:
+        return redirect(home, ln)
+    else:
+        html = redirect(home, ln)
+        html.set_cookie('ln', 'ru')
+        return html
 
 
 def home(request, ln):
@@ -30,7 +36,8 @@ def home(request, ln):
     if word_str is None or word_str == '':
         return get_all_woe(request, ln)
     elif word_str == "снупдог":
-        return render(request, 'abai.html')
+        data = {"ln": ln, "interface_words": get_interface_words(ln)}
+        return render(request, 'abai.html', data)
     else:
         woes = WOE.objects.all()
         word_list = morphy(word_str)
@@ -71,7 +78,9 @@ def get_all_woe(request, ln):
             title = woe.title_kz
         woe_text.append('<h2>' + title + '</h2>' + '<br>' + '<p>' + lens + '</p>' + '<br>')
     data = {"woes": woe_text, "ln": ln, "interface_words": get_interface_words(ln)}
-    return render(request, 'word_list.html', data)
+    html = render(request, 'word_list.html', data)
+    html.set_cookie('ln', ln)
+    return html
 
 
 def get_all_ch(request, ln):
@@ -84,7 +93,9 @@ def get_all_ch(request, ln):
             lens = ch.text_kz
         ch_text.append('<h2>' + str(ch.id) + '</h2>' + '<br>' + '<p>' + lens + '</p>' + '<br>')
     data = {"woes": ch_text, "ln": ln, "interface_words": get_interface_words(ln)}
-    return render(request, 'word_list.html', data)
+    html = render(request, 'word_list.html', data)
+    html.set_cookie('ln', ln)
+    return html
 
 
 def morphy(word):
@@ -94,6 +105,20 @@ def morphy(word):
     for x in p.lexeme:
         all_lexeme.append(x.word)
     return all_lexeme
+
+
+def page_not_found(request, exception):
+    ln = request.COOKIES.get('ln')
+    if ln is not None:
+        data = {"ln": ln, "interface_words": get_interface_words(ln)}
+        return render(request, '404.html', data)
+    else:
+        ln = 'ru'
+        data = {"ln": ln, "interface_words": get_interface_words(ln)}
+        html = render(request, '404.html', data)
+        html.set_cookie('ln', ln)
+        return html
+
 
 
 def get_interface_words(languages):
