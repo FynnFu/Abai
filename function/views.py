@@ -9,14 +9,20 @@ interface_words = {"find": 'Найти',
                    "word": 'Слово...',
                    "words_of_edification": 'Слова назидания',
                    "code_of_humanity": 'Кодекс человечности',
-                   "number_of_uses_of_the_word": 'Количество использований слова: '}
+                   "number_of_uses_of_the_word": 'Количество использований слова',
+                   "line_1_404": 'Тут пока ничего нет, но возможно в будущем будет)',
+                   "line_2_404": 'А пока можете поддержать проект донатом',
+                   "line_3_404": 'Вот ссылочка(нажмите на картинку):'}
 interface_words_kz = {"find": 'Іздеу',
                       "word_search": 'Сөзді іздеу',
                       "home": 'Басты бет',
                       "word": 'Сөз...',
                       "words_of_edification": 'Қара сөз',
                       "code_of_humanity": 'Адамгершілік кодекс',
-                      "number_of_uses_of_the_word": 'Қолданған сөздер саны: '}
+                      "number_of_uses_of_the_word": 'Қолданған сөздер саны',
+                      "line_1_404": 'Бұл жерде әлі ештеңе жоқ, бірақ болашақта болуы мүмкін)',
+                      "line_2_404": 'Әзірше жобаны қайырымдылық арқылы қолдауға болады',
+                      "line_3_404": 'Мұнда сілтеме (суретті басыңыз): '}
 
 
 def index(request, ln='ru'):
@@ -119,7 +125,6 @@ def page_not_found(request, exception):
         html = render(request, '404.html', data)
         html.set_cookie('ln', ln)
         return html
-
 
 
 def get_interface_words(languages):

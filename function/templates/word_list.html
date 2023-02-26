@@ -1,7 +1,7 @@
 {% extends "home.html" %}
 {% block content %}
     {% if word %}
-        <p class="amount">Количество использований слова "{{ word }}": {{ amount }}</p>
+        <p class="amount">{{ interface_words.number_of_uses_of_the_word }} "{{ word }}": {{ amount }}</p>
     {% endif %}
     {% for woe in woes %}
         {{ woe|safe }}

@@ -2,18 +2,22 @@
 {% load static %}
 {% block header %}
     <style>
-    a{
-        text-decoration: none;
-    }
+        .overflow{
+            text-align: center;
+            overflow:hidden;
+        }
     </style>
 {% endblock %}
 {% block content %}
     <div class="abai">
-        <p style="text-align: center" >Тут пока ничего нет, но возможно в будущем будет)</p>
-        <p style="text-align: center" >А пока можете поддержать проект донатом</p>
-        <p style="text-align: center" >Вот ссылочка:
-            <a href="https://www.donationalerts.com/r/arima2">https://www.donationalerts.com/r/arima2</a>
-        </p>
-        <p style="text-align: center" ><img src="{% static 'image/arima.jpeg' %}" alt="arima"></p>
+        <p style="text-align: center" >{{ interface_words.line_1_404 }}</p>
+        <p style="text-align: center" >{{ interface_words.line_2_404 }}</p>
+        <p style="text-align: center" >{{ interface_words.line_3_404 }}</p>
+        <div class="overflow">
+            <p style="text-align: center" >
+                <a href="https://www.donationalerts.com/r/arima2">
+                    <img src="{% static 'image/arima.jpeg' %}" alt="arima" >
+                </a>
+            </p>
     </div>
 {% endblock content %}
