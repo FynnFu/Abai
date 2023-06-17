@@ -3,16 +3,16 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from function.models import *
 
-interface_words = {"find": 'Найти',
-                   "word_search": 'Поиск слова',
-                   "home": 'Главная',
-                   "word": 'Слово...',
-                   "words_of_edification": 'Слова назидания',
-                   "code_of_humanity": 'Кодекс человечности',
-                   "number_of_uses_of_the_word": 'Количество использований слова',
-                   "line_1_404": 'Тут пока ничего нет, но возможно в будущем будет)',
-                   "line_2_404": 'А пока можете поддержать проект донатом',
-                   "line_3_404": 'Вот ссылочка(нажмите на картинку):'}
+interface_words_ru = {"find": 'Найти',
+                      "word_search": 'Поиск слова',
+                      "home": 'Главная',
+                      "word": 'Слово...',
+                      "words_of_edification": 'Слова назидания',
+                      "code_of_humanity": 'Кодекс человечности',
+                      "number_of_uses_of_the_word": 'Количество использований слова',
+                      "line_1_404": 'Тут пока ничего нет, но возможно в будущем будет)',
+                      "line_2_404": 'А пока можете поддержать проект донатом',
+                      "line_3_404": 'Вот ссылочка(нажмите на картинку):'}
 interface_words_kz = {"find": 'Іздеу',
                       "word_search": 'Сөзді іздеу',
                       "home": 'Басты бет',
@@ -40,11 +40,9 @@ def home(request, ln):
     woe_text = []
     title_list = []
     word_str = request.POST.get('word_str', None)
+    word_str = word_str.strip()
     if word_str is None or word_str == '':
-        return get_all_woe(request, ln)
-    elif word_str == "снупдог":
-        data = {"ln": ln, "interface_words": get_interface_words(ln)}
-        return render(request, 'abai.html', data)
+        return redirect('woe', ln=ln)
     else:
         woes = WOE.objects.all()
         word_list = morphy(word_str)
@@ -129,8 +127,8 @@ def page_not_found(request, exception):
 
 def get_interface_words(languages):
     if languages == 'ru':
-        return interface_words
+        return interface_words_ru
     elif languages == 'kz':
         return interface_words_kz
     else:
-        return interface_words
+        return interface_words_ru

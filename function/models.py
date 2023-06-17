@@ -21,3 +21,10 @@ class CH(models.Model):
     def __str__(self):
         return str(self.id)
 
+
+class Poems(models.Model):
+    id = models.AutoField(primary_key=True)
+    title = models.CharField(max_length=100, default='', null=True)
+    title_kz = models.CharField(max_length=100, default='', null=True)
+    text = models.TextField(null=True, default='')
+    text_kz = models.TextField(null=True, default='')
