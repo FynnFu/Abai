@@ -40,10 +40,10 @@ def home(request, ln):
     woe_text = []
     title_list = []
     word_str = request.POST.get('word_str', None)
-    word_str = word_str.strip()
     if word_str is None or word_str == '':
         return redirect('woe', ln=ln)
     else:
+        word_str = word_str.strip()
         woes = WOE.objects.all()
         word_list = morphy(word_str)
         for woe in woes:
